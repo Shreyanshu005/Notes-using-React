@@ -365,3 +365,6 @@ margin-bottom: 0;}
    
   }
 }
+.note-detail input,.note-detail textarea{
+     width: -webkit-fill-available;
+}

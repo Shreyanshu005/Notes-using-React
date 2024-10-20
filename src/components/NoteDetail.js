@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const NoteDetail = ({ note, editNote }) => {
+const NoteDetail = ({ note, editNote, onSave }) => {
   const [title, setTitle] = useState(note.title);
   const [content, setContent] = useState(note.content);
   const [isDirty, setIsDirty] = useState(false);
@@ -24,6 +24,7 @@ const NoteDetail = ({ note, editNote }) => {
   const handleSave = () => {
     editNote({ ...note, title, content });
     setIsDirty(false);
+    onSave();  
   };
 
   return (

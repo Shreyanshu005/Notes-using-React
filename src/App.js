@@ -59,6 +59,10 @@ const App = () => {
     setDarkMode(!darkMode); 
   };
 
+  const hideRightPane = () => {
+    setSelectedNote(null); 
+  };
+
   const filteredNotes = notes
     .filter(note =>
       note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -96,6 +100,7 @@ const App = () => {
           <NoteDetail
             note={selectedNote}
             editNote={isCreating ? addNote : editNote}
+            onSave={hideRightPane} 
           />
         ) : (
           <p>Select a note or create a new one!</p>
