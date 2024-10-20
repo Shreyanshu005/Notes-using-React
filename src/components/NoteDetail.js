@@ -3,27 +3,27 @@ import React, { useEffect, useState } from 'react';
 const NoteDetail = ({ note, editNote, onSave }) => {
   const [title, setTitle] = useState(note.title);
   const [content, setContent] = useState(note.content);
-  const [isDirty, setIsDirty] = useState(false);
+  
 
   useEffect(() => {
     setTitle(note.title);
     setContent(note.content);
-    setIsDirty(false);
+    
   }, [note]);
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
-    setIsDirty(true);
+    
   };
 
   const handleContentChange = (e) => {
     setContent(e.target.value);
-    setIsDirty(true);
+    
   };
 
   const handleSave = () => {
     editNote({ ...note, title, content });
-    setIsDirty(false);
+    
     onSave();  
   };
 
@@ -46,7 +46,7 @@ const NoteDetail = ({ note, editNote, onSave }) => {
         placeholder="Enter your note"
       />
       <span className="char-counter">{`Characters: ${content.length}`}</span>
-      {isDirty && <button onClick={handleSave}>Save Changes</button>}
+      { <button onClick={handleSave}>Save Changes</button>}
       
       {note.lastEdited && <p className="last-edited">Last Edited: {note.lastEdited}</p>}
     </div>
