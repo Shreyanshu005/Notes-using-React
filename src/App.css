@@ -61,6 +61,7 @@
   padding: 0;
   margin: 0;
   overflow-y: auto;
+  height: 70vh;
 }
 
 .note-item {
@@ -229,7 +230,66 @@ button.delete-button {
   width: 100px;
 margin-bottom: 0;}
 
-@media (min-width: 768px) {
+
+
+.note-item.selected {
+  background-color: rgb(229, 222, 250);
+}
+
+
+
+.app.dark-mode {
+  background-color: #2c2c2c;
+  color: white;
+}
+
+.app.dark-mode .left-pane, .app.dark-mode .right-pane {
+  background-color: #202020;
+  
+}
+.app.dark-mode .left-pane{
+  border-color: #2c2c2c;
+}
+
+.app.dark-mode .search-box {
+  background-color: #3b3b3b;
+  border: 1px solid #777;
+  color: white;
+}
+
+.app.dark-mode .note-item {
+  background-color: #3b3b3b;
+  border: 1px solid #777;
+  color: whitesmoke;
+  border-left: 6px solid rgb(118,75,239);
+}
+
+.app.dark-mode .pin-button, .app.dark-mode .delete-button {
+  
+  color: white;
+}
+
+.app.dark-mode .note-input input,.app.dark-mode .note-detail input,.app.dark-mode .note-detail textarea,
+.app.dark-mode .note-input textarea {
+  border-color: #777;
+  background-color: #333;
+  color: white;
+}
+
+.header button{
+ 
+  position: fixed;
+  bottom: 10px;
+}
+.app.dark-mode .note-item h2,.app.dark-mode .note-item p{
+  color: white;
+}
+.app.dark-mode .note-item.pinned {
+  border-left: 6px solid rgb(90, 56, 183);
+  background-color: #262625;
+}
+
+@media (min-width: 800px) {
   .app {
     flex-direction: row; 
   }
@@ -237,9 +297,11 @@ margin-bottom: 0;}
   .left-pane {
     border-right: 1px solid #ddd; 
   }
-}
 
-@media (max-width: 800px) {
+
+  
+
+
   .left-pane,
   .right-pane {
     padding: 10px; 
@@ -278,6 +340,7 @@ margin-bottom: 0;}
   .pin-button {
     width: 90%; 
   }
+ 
 }
 
 @media (max-width: 500px) {
@@ -292,8 +355,13 @@ margin-bottom: 0;}
   .note-detail textarea {
     height: 40vh; 
   }
-}
 
-.note-item.selected {
-  background-color: rgb(229, 222, 250);
+  
+}
+@media(max-width: 800px){
+  .header button{
+    position: static;
+ width: 100%;
+   
+  }
 }

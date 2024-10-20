@@ -8,6 +8,7 @@ const App = () => {
   const [selectedNote, setSelectedNote] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [darkMode, setDarkMode] = useState(false);  
 
   const addNote = (newNote) => {
     const timestamp = new Date().toLocaleString();
@@ -21,7 +22,6 @@ const App = () => {
     setNotes(notes.map(note => 
       (note === selectedNote ? { ...updatedNote, lastEdited: timestamp } : note)
     )); 
-
     setSelectedNote({ ...updatedNote, lastEdited: timestamp }); 
   };
 
@@ -55,6 +55,10 @@ const App = () => {
     setSearchTerm(e.target.value);
   };
 
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode); 
+  };
+
   const filteredNotes = notes
     .filter(note =>
       note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -63,8 +67,14 @@ const App = () => {
     .sort((a, b) => (a.pinned === b.pinned ? 0 : a.pinned ? -1 : 1)); 
 
   return (
-    <div className="app">
+    <div className={`app ${darkMode ? 'dark-mode' : ''}`}>
+     
       <div className="left-pane">
+      <div className="header">
+        <button onClick={toggleDarkMode}>
+          {darkMode ? 'Light Mode' : 'Dark Mode'}
+        </button>
+      </div>
         <input
           type="text"
           placeholder="Search notes..."
