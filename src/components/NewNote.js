@@ -1,15 +1,33 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const NoteInput = ({ addNote }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+  
     if (title && content) {
-      addNote({ title, content });
-      setTitle('');
-      setContent('');
+      try {
+        const response = await axios.post("https://notes-backend-ts.onrender.com/api/notes", {
+          title,
+          content,
+        });
+        console.log('Note created:', response.data);
+        if(response.data.success){
+           
+          
+        addNote(response.data.data.note);
+        setTitle('');
+        setContent('');
+
+      
+      }
+       
+      } catch (error) {
+        console.error('Error creating note:', error);
+      }
     }
   };
 
