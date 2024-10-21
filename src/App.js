@@ -1,37 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NoteList from './components/List';
 import NoteDetail from './components/NoteDetail';
 import './App.css';
 
 const App = () => {
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState(() => {
+  
+    const savedNotes = localStorage.getItem('notes');
+    return savedNotes ? JSON.parse(savedNotes) : [];
+  });
   const [selectedNote, setSelectedNote] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [darkMode, setDarkMode] = useState(false);  
+  const [darkMode, setDarkMode] = useState(false);
+
+  
+  useEffect(() => {
+    localStorage.setItem('notes', JSON.stringify(notes));
+  }, [notes]);
 
   const addNote = (newNote) => {
     const timestamp = new Date().toLocaleString();
-    setNotes([{ ...newNote, lastEdited: timestamp }, ...notes]); 
+    const updatedNotes = [{ ...newNote, lastEdited: timestamp }, ...notes];
+    setNotes(updatedNotes);
     setSelectedNote({ ...newNote, lastEdited: timestamp });
     setIsCreating(false);
   };
 
   const editNote = (updatedNote) => {
-    const timestamp = new Date().toLocaleString(); 
-    setNotes(notes.map(note => 
-      (note === selectedNote ? { ...updatedNote, lastEdited: timestamp } : note)
-    )); 
-    setSelectedNote({ ...updatedNote, lastEdited: timestamp }); 
+    const timestamp = new Date().toLocaleString();
+    const updatedNotes = notes.map(note =>
+      note === selectedNote ? { ...updatedNote, lastEdited: timestamp } : note
+    );
+    setNotes(updatedNotes);
+    setSelectedNote({ ...updatedNote, lastEdited: timestamp });
   };
 
   const pinNote = (noteToPin) => {
-    setNotes(notes.map(note => {
+    const updatedNotes = notes.map(note => {
       if (note === noteToPin) {
         return { ...note, pinned: !note.pinned };
       }
       return note;
-    }));
+    });
+    setNotes(updatedNotes);
   };
 
   const selectNote = (note) => {
@@ -45,9 +57,10 @@ const App = () => {
   };
 
   const deleteNote = (noteToDelete) => {
-    setNotes(notes.filter(note => note !== noteToDelete));
+    const updatedNotes = notes.filter(note => note !== noteToDelete);
+    setNotes(updatedNotes);
     if (selectedNote === noteToDelete) {
-      setSelectedNote(null); 
+      setSelectedNote(null);
     }
   };
 
@@ -56,11 +69,11 @@ const App = () => {
   };
 
   const toggleDarkMode = () => {
-    setDarkMode(!darkMode); 
+    setDarkMode(!darkMode);
   };
 
   const hideRightPane = () => {
-    setSelectedNote(null); 
+    setSelectedNote(null);
   };
 
   const filteredNotes = notes
@@ -68,17 +81,16 @@ const App = () => {
       note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       note.content.toLowerCase().includes(searchTerm.toLowerCase())
     )
-    .sort((a, b) => (a.pinned === b.pinned ? 0 : a.pinned ? -1 : 1)); 
+    .sort((a, b) => (a.pinned === b.pinned ? 0 : a.pinned ? -1 : 1));
 
   return (
     <div className={`app ${darkMode ? 'dark-mode' : ''}`}>
-     
       <div className="left-pane">
-      <div className="header">
-        <button onClick={toggleDarkMode}>
-          {darkMode ? 'Light Mode' : 'Dark Mode'}
-        </button>
-      </div>
+        <div className="header">
+          <button onClick={toggleDarkMode}>
+            {darkMode ? 'Light Mode' : 'Dark Mode'}
+          </button>
+        </div>
         <input
           type="text"
           placeholder="Search notes..."
@@ -87,12 +99,12 @@ const App = () => {
           className="search-box"
         />
         <button onClick={createNewNote}>Create New Note</button>
-        <NoteList 
-          notes={filteredNotes} 
-          onSelectNote={selectNote} 
-          pinNote={pinNote} 
-          deleteNote={deleteNote} 
-          selectedNote={selectedNote} 
+        <NoteList
+          notes={filteredNotes}
+          onSelectNote={selectNote}
+          pinNote={pinNote}
+          deleteNote={deleteNote}
+          selectedNote={selectedNote}
         />
       </div>
       <div className="right-pane">
@@ -100,7 +112,7 @@ const App = () => {
           <NoteDetail
             note={selectedNote}
             editNote={isCreating ? addNote : editNote}
-            onSave={hideRightPane} 
+            onSave={hideRightPane}
           />
         ) : (
           <p>Select a note or create a new one!</p>
