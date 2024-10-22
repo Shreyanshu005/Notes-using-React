@@ -3,16 +3,14 @@ import NoteList from './List';
 import NoteDetail from './NoteDetail';
 import { useNavigate } from 'react-router-dom';
 import NewNote from './NewNote';
+import axios from 'axios';
 
 import '../App.css';
 
 const Home = () => {
     const navigate=useNavigate();
-  const [notes, setNotes] = useState(() => {
-  
-    const savedNotes = localStorage.getItem('notes');
-    return savedNotes ? JSON.parse(savedNotes) : [];
-  });
+  const [notes, setNotes] = useState([]);
+
   const [selectedNote, setSelectedNote] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -24,12 +22,25 @@ const Home = () => {
     if (!sessionId) {
       navigate('/login');
     }
+    const fetchNotes = async () => {
+      try {
+        const token = localStorage.getItem('sessionid');
+        const headers = {
+          'Content-Type': 'application',
+          'Authorization': `Bearer ${token}`
+        };
+        const response = await axios.get("https://notes-backend-ts.onrender.com/api/notes", { headers });
+        console.log('Notes:', response.data);
+        setNotes(response.data.data.notes);
+      }
+      catch (error) {
+        console.error('Error fetching notes:', error);
+      }
+    }
+    fetchNotes();
   }, [navigate]);
 
   
-  useEffect(() => {
-    localStorage.setItem('notes', JSON.stringify(notes));
-  }, [notes]);
 
   const addNote = (newNote) => {
     const timestamp = new Date().toLocaleString();
@@ -39,14 +50,45 @@ const Home = () => {
     setIsCreating(false);
   };
 
-  const editNote = (updatedNote) => {
-    const timestamp = new Date().toLocaleString();
-    const updatedNotes = notes.map(note =>
-      note === selectedNote ? { ...updatedNote, lastEdited: timestamp } : note
-    );
-    setNotes(updatedNotes);
-    setSelectedNote({ ...updatedNote, lastEdited: timestamp });
+  const editNote = async (updatedNote) => {
+    try {
+      const token = localStorage.getItem('sessionid');
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      };
+  
+    
+      if (!updatedNote._id) {
+        throw new Error('Note ID is missing');
+      }
+  
+      console.log('Editing note:', updatedNote);
+      const response = await axios.put(
+
+        `https://notes-backend-ts.onrender.com/api/notes/${updatedNote._id}`, 
+        {
+          title: updatedNote.title,
+          content: updatedNote.content,
+        },
+        { headers }
+      );
+  
+      console.log('Edit response:', response.data);
+  
+      if (response.data.success) {
+        const timestamp = new Date().toLocaleString();
+        const updatedNotes = notes.map(note =>
+          note._id === updatedNote._id ? { ...updatedNote, lastEdited: timestamp } : note
+        );
+        setNotes(updatedNotes);
+        setSelectedNote({ ...updatedNote, lastEdited: timestamp });
+      }
+    } catch (error) {
+      console.error('Error editing note:', error);
+    }
   };
+  
 
   const pinNote = (noteToPin) => {
     const updatedNotes = notes.map(note => {
@@ -68,13 +110,36 @@ const Home = () => {
     setIsCreating(true);
   };
 
-  const deleteNote = (noteToDelete) => {
-    const updatedNotes = notes.filter(note => note !== noteToDelete);
-    setNotes(updatedNotes);
-    if (selectedNote === noteToDelete) {
-      setSelectedNote(null);
+  const deleteNote = async (noteToDelete) => {
+    try {
+      const token = localStorage.getItem('sessionid');
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      };
+  
+      if (!noteToDelete._id) {
+        throw new Error('Note ID is missing');
+      }
+      console.log('Deleting note:', noteToDelete);
+  
+      const response = await axios.delete(
+        `https://notes-backend-ts.onrender.com/api/notes/${noteToDelete._id}`, 
+        { headers }
+      );
+  
+      if (response.data.success) {
+        const updatedNotes = notes.filter(note => note._id !== noteToDelete._id);
+        setNotes(updatedNotes);
+        if (selectedNote === noteToDelete) {
+          setSelectedNote(null);
+        }
+      }
+    } catch (error) {
+      console.error('Error deleting note:', error);
     }
   };
+  
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -134,7 +199,7 @@ const Home = () => {
           selectedNote && (
             <NoteDetail
               note={selectedNote}
-              editNote={addNote}
+              editNote={editNote}
               onSave={() => setIsCreating(false)}
             />
           )
