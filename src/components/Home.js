@@ -5,8 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import NewNote from './NewNote';
 import axios from 'axios';
 
-import '../App.css';
+
 import './css/NewNote.css'
+import '../App.css';
 
 const Home = () => {
     const navigate=useNavigate();

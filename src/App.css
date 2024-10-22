@@ -367,12 +367,12 @@ margin-bottom: 0;}
 @media(max-width: 800px){
   .header button{
     position: static;
- width: 100%;
+    width: 40%;
    
   }
+  
   .logoutB{
-    left: 120px;
-    width: auto; 
+    margin-left: 20%;
   }
   
 }
