@@ -6,6 +6,7 @@ import NewNote from './NewNote';
 import axios from 'axios';
 
 import '../App.css';
+import './css/NewNote.css'
 
 const Home = () => {
     const navigate=useNavigate();

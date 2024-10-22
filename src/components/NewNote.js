@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 
+
 const NewNote = ({ addNote }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -59,15 +60,20 @@ const NewNote = ({ addNote }) => {
         type="text"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        placeholder="Enter note title"
+        placeholder="Enter note title (max 50 characters)"
+        maxLength="50"
         className="note-title"
       />
+              <span className="title-char-counter">{`${title.length}/50`}</span>
+
       <textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="Enter note content"
         className="note-content"
       />
+            <span className="char-counter">{`Characters: ${content.length}`}</span>
+
       <button type="submit">Add Note</button>
     </form>
   );
