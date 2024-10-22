@@ -30,6 +30,8 @@ const NewNote = ({ addNote }) => {
           {
             headers: {
               'Content-Type': 'application/json',
+              'Authorization': `Bearer ${sessionId}`,
+
             },
             withCredentials: true, 
           }
