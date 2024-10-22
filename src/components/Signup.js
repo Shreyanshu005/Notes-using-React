@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../components/css/Signup.css';
 import { useNavigate,Link } from 'react-router-dom';
 
@@ -28,7 +30,7 @@ const Signup = () => {
           navigate("/login");
         }
       } catch (error) {
-        console.log(error);
+        toast.error(error.response.data.error);
       }
 
     setName('');
@@ -77,6 +79,7 @@ const Signup = () => {
           Already have an account? <Link to="/login">Log in</Link>
         </p>
       </form>
+      <ToastContainer />
     </div>
   );
 };

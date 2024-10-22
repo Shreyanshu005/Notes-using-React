@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
@@ -43,11 +45,9 @@ const NewNote = ({ addNote }) => {
           addNote(response.data.data.note);
           setTitle('');
           setContent('');
-        } else {
-          console.error('API response error:', response.data.message);
-        }
+        } 
       } catch (error) {
-        console.error('Error creating note:', error);
+        toast.error(error.response.data.error);
       }
     } else {
       console.error('Title and content are required');
@@ -75,6 +75,7 @@ const NewNote = ({ addNote }) => {
             <span className="char-counter">{`Characters: ${content.length}`}</span>
 
       <button type="submit">Add Note</button>
+      <ToastContainer />
     </form>
   );
 };

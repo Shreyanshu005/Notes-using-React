@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import NoteList from './List';
 import NoteDetail from './NoteDetail';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+        import 'react-toastify/dist/ReactToastify.css';
 import NewNote from './NewNote';
 import axios from 'axios';
 
@@ -36,7 +38,7 @@ const Home = () => {
         setNotes(response.data.data.notes);
       }
       catch (error) {
-        console.error('Error fetching notes:', error);
+        toast.error(error.response.data.error);
       }
     }
     fetchNotes();
@@ -86,8 +88,8 @@ const Home = () => {
         setNotes(updatedNotes);
         setSelectedNote({ ...updatedNote, lastEdited: timestamp });
       }
-    } catch (error) {
-      console.error('Error editing note:', error);
+    }  catch (error) {
+      toast.error(error.response.data.error);
     }
   };
   
@@ -137,8 +139,8 @@ const Home = () => {
           setSelectedNote(null);
         }
       }
-    } catch (error) {
-      console.error('Error deleting note:', error);
+    }  catch (error) {
+      toast.error(error.response.data.error);
     }
   };
   
@@ -215,6 +217,7 @@ const Home = () => {
           )
         )}
       </div>
+      <ToastContainer />
     </div>
    
   );

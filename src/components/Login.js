@@ -1,42 +1,39 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../components/css/Login.css';
-import { useNavigate,Link } from 'react-router-dom';
 
+import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
- 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
-        const response = await axios.post("https://notes-backend-ts.onrender.com/api/auth/login",{
-        
-          email,
-          password
-        },{withCredentials:true})
-        console.log(response);
-        if(response.data.success){
-           
-            localStorage.setItem('sessionid', response.data.data.sessionId);
+      const response = await axios.post("https://notes-backend-ts.onrender.com/api/auth/login", {
+        email,
+        password
+      }, { withCredentials: true });
 
-          navigate("/home");
-        }
-      } catch (error) {
-        console.log(error);
-      }
+      if (response.data.success) {
+        localStorage.setItem('sessionid', response.data.data.sessionId);
+        navigate("/home");
+      } 
+    } catch (error) {
+      
+      toast.error(error.response.data.error);
+    }
 
-   
     setEmail('');
     setPassword('');
-
-
   };
+
   return (
     <div className="login-container">
       <h2>Login</h2>
@@ -66,6 +63,9 @@ const Login = () => {
           Don't have an account? <Link to="/signup">Sign up</Link>
         </p>
       </form>
+
+    
+      <ToastContainer />
     </div>
   );
 };
