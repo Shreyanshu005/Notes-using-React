@@ -10,10 +10,16 @@ const NoteInput = ({ addNote }) => {
   
     if (title && content) {
       try {
+        const sessionId = localStorage.getItem('sessionid');
+        document.cookie = `sessionId=${sessionId};Path=/;`;
+        console.log('Session ID:', sessionId );
+
         const response = await axios.post("https://notes-backend-ts.onrender.com/api/notes", {
           title,
           content,
-        });
+        },
+        {withCredentials:true} 
+        );
         console.log('Note created:', response.data);
         if(response.data.success){
            

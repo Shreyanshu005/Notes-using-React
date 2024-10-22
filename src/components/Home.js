@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import NoteList from './List';
 import NoteDetail from './NoteDetail';
 import { useNavigate } from 'react-router-dom';
+import NewNote from './NewNote';
 
 import '../App.css';
 
@@ -127,14 +128,16 @@ const Home = () => {
         />
       </div>
       <div className="right-pane">
-        {selectedNote ? (
-          <NoteDetail
-            note={selectedNote}
-            editNote={isCreating ? addNote : editNote}
-            onSave={hideRightPane}
-          />
+      {isCreating ? (
+          <NewNote addNote={addNote} />
         ) : (
-          <p>Select a note or create a new one!</p>
+          selectedNote && (
+            <NoteDetail
+              note={selectedNote}
+              editNote={addNote}
+              onSave={() => setIsCreating(false)}
+            />
+          )
         )}
       </div>
     </div>
