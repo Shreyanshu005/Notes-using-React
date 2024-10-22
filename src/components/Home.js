@@ -20,7 +20,7 @@ const Home = () => {
     const sessionId = localStorage.getItem('sessionid');
     console.log('Session ID:', sessionId);
     if (!sessionId) {
-      navigate('/login');
+      navigate('/signup');
     }
     const fetchNotes = async () => {
       try {
