@@ -168,14 +168,22 @@ const Home = () => {
         return 1;
       }
     });
+    const logout = () => {
+      localStorage.removeItem('sessionid');
+      navigate('/login');
+    };
 
   return (
     <div className={`app ${darkMode ? 'dark-mode' : ''}`}>
       <div className="left-pane">
         <div className="header">
           <button onClick={toggleDarkMode}>
+          
+
             {darkMode ? 'Light Mode' : 'Dark Mode'}
+
           </button>
+          <button onClick={logout}className='logoutB'>Logout Now</button>
         </div>
         <input
           type="text"

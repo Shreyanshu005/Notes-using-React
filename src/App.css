@@ -289,8 +289,13 @@ margin-bottom: 0;}
   border-left: 6px solid rgb(90, 56, 183);
   background-color: #262625;
 }
+.logoutB{
+  left: 120px;
+  width: 100px ;
+}
 
 @media (min-width: 800px) {
+
   .app {
     flex-direction: row; 
   }
@@ -365,6 +370,11 @@ margin-bottom: 0;}
  width: 100%;
    
   }
+  .logoutB{
+    left: 120px;
+    width: auto; 
+  }
+  
 }
 .note-detail input,.note-detail textarea{
      width: -webkit-fill-available;
