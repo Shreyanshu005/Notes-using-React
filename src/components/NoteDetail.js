@@ -29,7 +29,7 @@ const NoteDetail = ({ note, editNote, onSave }) => {
 
   return (
     <div className="note-detail">
-      <h2>{note.title ? "Edit Note" : "New Note"}</h2>
+      <h2>Edit Note</h2>
       <div className="title-wrapper">
         <input
           type="text"

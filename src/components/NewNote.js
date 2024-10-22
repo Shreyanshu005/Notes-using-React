@@ -56,6 +56,7 @@ const NewNote = ({ addNote }) => {
 
   return (
     <form onSubmit={handleSubmit} className="note-input">
+        <h2>New Note</h2>
       <input
         type="text"
         value={title}
