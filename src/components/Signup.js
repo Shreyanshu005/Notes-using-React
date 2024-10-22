@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import '../components/css/Signup.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Link } from 'react-router-dom';
 
 
 const Signup = () => {
@@ -73,6 +73,9 @@ const Signup = () => {
           />
         </div>
         <button type="submit">Signup</button>
+        <p>
+          Already have an account? <Link to="/login">Log in</Link>
+        </p>
       </form>
     </div>
   );
