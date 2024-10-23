@@ -22,7 +22,6 @@ const Home = () => {
 
   useEffect(() => {
     const sessionId = localStorage.getItem('sessionid');
-    console.log('Session ID:', sessionId);
     if (!sessionId) {
       navigate('/login');
     }
@@ -34,11 +33,14 @@ const Home = () => {
           'Authorization': `Bearer ${token}`
         };
         const response = await axios.get("https://notes-backend-ts.onrender.com/api/notes", { headers });
-        console.log('Notes:', response.data);
+       
         setNotes(response.data.data.notes);
       }
       catch (error) {
-        toast.error(error.response.data.error);
+        if(error.response.data.error !== "No notes found!"){
+          toast.error(error.response.data.error);
+
+        }
       }
     }
     fetchNotes();
@@ -67,7 +69,6 @@ const Home = () => {
         throw new Error('Note ID is missing');
       }
   
-      console.log('Editing note:', updatedNote);
       const response = await axios.put(
 
         `https://notes-backend-ts.onrender.com/api/notes/${updatedNote._id}`, 
@@ -78,7 +79,6 @@ const Home = () => {
         { headers }
       );
   
-      console.log('Edit response:', response.data);
   
       if (response.data.success) {
         const timestamp = new Date().toLocaleString();

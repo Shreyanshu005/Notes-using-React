@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -8,7 +8,13 @@ import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
   const navigate = useNavigate();
-
+  useEffect(() => {
+    const sessionId = localStorage.getItem('sessionid');
+    if (sessionId) {
+      navigate('/home');
+    }
+  });
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
