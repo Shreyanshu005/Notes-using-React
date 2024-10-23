@@ -3,41 +3,42 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../components/css/Signup.css';
-import { useNavigate,Link } from 'react-router-dom';
-
+import { useNavigate, Link } from 'react-router-dom';
+import './css/Loader.css'
 
 const Signup = () => {
-    const navigate = useNavigate();
-
+  const navigate = useNavigate();
+  
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false); 
 
-
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
+    setLoading(true); 
+
     try {
-        const response = await axios.post("https://notes-backend-ts.onrender.com/api/auth/register",{
-        username:name,
-          email,
-          password
-        })
-        console.log(response);
-        if(response.data.success){
-           
-          console.log(response.data);
-          navigate("/login");
-        }
-      } catch (error) {
-        toast.error(error.response.data.error);
+      const response = await axios.post("https://notes-backend-ts.onrender.com/api/auth/register", {
+        username: name,
+        email,
+        password
+      });
+      
+      if (response.data.success) {
+        console.log(response.data);
+        navigate("/login");
       }
+    } catch (error) {
+      toast.error(error.response.data.error);
+    } finally {
+      setLoading(false); 
 
-    setName('');
-    setEmail('');
-    setPassword('');
-
-
+      setName('');
+      setEmail('');
+      setPassword('');
+    }
   };
 
   return (
@@ -74,7 +75,8 @@ const Signup = () => {
             required
           />
         </div>
-        <button type="submit">Signup</button>
+        <button type="submit" disabled={loading}>Signup</button> 
+        {loading && <div className="loading-indicator">Signing up...</div>}
         <p>
           Already have an account? <Link to="/login">Log in</Link>
         </p>

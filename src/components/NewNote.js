@@ -2,17 +2,19 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-
+import './css/NewNote.css';
+import './css/Loader.css'
 
 const NewNote = ({ addNote }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [loading, setLoading] = useState(false); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (title && content) {
+      setLoading(true); 
       try {
         const sessionId = localStorage.getItem('sessionid');
         if (!sessionId) {
@@ -21,8 +23,6 @@ const NewNote = ({ addNote }) => {
         }
 
         document.cookie = `sessionid=${sessionId}; Path=/; SameSite=None; Secure`;
-
-        console.log('Session ID:', sessionId);
 
         const response = await axios.post(
           'https://notes-backend-ts.onrender.com/api/notes',
@@ -34,20 +34,20 @@ const NewNote = ({ addNote }) => {
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${sessionId}`,
-
             },
-            withCredentials: true, 
+            withCredentials: true,
           }
         );
 
-        console.log('Note created:', response.data);
         if (response.data.success) {
           addNote(response.data.data.note);
           setTitle('');
           setContent('');
-        } 
+        }
       } catch (error) {
         toast.error(error.response.data.error);
+      } finally {
+        setLoading(false);
       }
     } else {
       console.error('Title and content are required');
@@ -56,7 +56,7 @@ const NewNote = ({ addNote }) => {
 
   return (
     <form onSubmit={handleSubmit} className="note-input">
-        <h2>New Note</h2>
+      <h2>New Note</h2>
       <input
         type="text"
         value={title}
@@ -65,7 +65,7 @@ const NewNote = ({ addNote }) => {
         maxLength="50"
         className="note-title"
       />
-              <span className="title-char-counter">{`${title.length}/50`}</span>
+      <span className="title-char-counter">{`${title.length}/50`}</span>
 
       <textarea
         value={content}
@@ -73,9 +73,10 @@ const NewNote = ({ addNote }) => {
         placeholder="Enter note content"
         className="note-content"
       />
-            <span className="char-counter">{`Characters: ${content.length}`}</span>
+      <span className="char-counter">{`Characters: ${content.length}`}</span>
 
-      <button type="submit">Add Note</button>
+      <button type="submit" disabled={loading}>Add Note</button> 
+      {loading && <div className="loading-indicator">Adding note...</div>} 
       <ToastContainer />
     </form>
   );
